@@ -2,10 +2,6 @@
 
 Before you begin, it is recommended to understand exactly how this project works. Knowing what is happening at each point will help you troubleshoot any issues far better. Check out the [How does this all work?](DETAILS.md) page.
 
-## Video tutorial
-
-For a video tutorial, [click here](https://youtu.be/Tcco-bES1-M). **You still need this written guide** — the video is not up to date, and it does not cover everything written here.
-
 ## Table of Contents
 
 - [Advanced Installation](#advanced-installation)
@@ -113,7 +109,7 @@ There are two types of signing profiles:
 
   If you have a provisioning profile with a `.mobileprovision` extension, you can use this method as well. There is no 6-digit code, so signing will be faster than a developer account. However, based on the type of your provisioning profile, different entitlements and features may not work on your signed apps. For the differences, check the [FAQ](FAQ.md#what-kind-of-certificatesprovisioning-profiles-are-supported) page.
 
-Additionally, you will also need a certificate archive with a `.p12` extension. It must contain at least one certificate and at least one private key. You can either use an `Apple Development` certificate, or both `Apple Development` and `Apple Distribution` if you want to use production entitlements. For the differences, check the [FAQ](FAQ.md#what-kind-of-certificatesprovisioning-profiles-are-supported) page.
+Additionally, you will also need a certificate archive with a `.p12` extension. It must contain at least one certificate and at least one private key. If you need development entitlements, add an `Apple Development` certificate and its key. If you need distribution entitlements, add both an `Apple Development` and `Apple Distribution` certificate, along with their keys. For the differences, check the [FAQ](FAQ.md#what-kind-of-certificatesprovisioning-profiles-are-supported) page.
 
 If you are using a custom provisioning profile, you likely received a certificate archive along with it — use that. If you have a developer account, you can create one from the [developer portal](https://developer.apple.com/account/resources/certificates/list). Otherwise, follow the instructions below:
 
@@ -225,16 +221,17 @@ Secure, fast, reliable, but harder to set up
   ```
   where `*` is a wildcard parameter.
 
-- Make sure the `Host` header is preserved by your reverse proxy. For nginx, you need the following line:
+- Make sure the request hostname and scheme are preserved by your reverse proxy. For nginx, you need the following lines:
   ```nginx
   proxy_set_header Host $http_host;
+  proxy_set_header X-Forwarded-Proto $scheme;
   ```
 
 ### 4b. Tunnel provider
 
 Less secure, slower, but quick and easy to set up
 
-[ngrok](https://ngrok.com/) and [Cloudflare Argo](https://blog.cloudflare.com/a-free-argo-tunnel-for-your-next-project/#how-can-i-use-the-free-version) are supported as tunnel providers. The latter will be demonstrated in this guide. Run the signer service with `-help` to see alternative details.
+[ngrok](https://ngrok.com/) and [Cloudflare Argo](https://blog.cloudflare.com/a-free-argo-tunnel-for-your-next-project/#how-can-i-use-the-free-version) are supported as tunnel providers. The latter will be demonstrated in this guide since it has no restrictions. Run the signer service with `-help` to see alternative details.
 
 1. Download the correct [cloudflared](https://github.com/cloudflare/cloudflared/releases/latest) binary for your computer.
 2. **Every time before** starting your service, execute the following command and keep it running:
